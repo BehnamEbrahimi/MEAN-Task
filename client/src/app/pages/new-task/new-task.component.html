@@ -1,0 +1,55 @@
+<div class="centered-content bg-info">
+  <div class="modal-box bg-light text-secondary">
+    <h2 class="title">
+      Create a new task
+    </h2>
+    <form #f="ngForm" (ngSubmit)="createTask(f.value)">
+      <div class="form-group">
+        <input
+          required
+          minlength="3"
+          ngModel
+          name="description"
+          #description="ngModel"
+          class="form-control"
+          type="text"
+          placeholder="Task description"
+        />
+        <div
+          class="alert alert-danger"
+          *ngIf="description.touched && !description.valid"
+        >
+          <div *ngIf="description.errors.required">
+            Description is required.
+          </div>
+          <div *ngIf="description.errors.minlength">
+            Description should be at least 3 characters.
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <input
+          required
+          ngModel
+          name="date"
+          #date="ngModel"
+          class="form-control"
+          type="date"
+          placeholder="Date"
+        />
+        <div class="alert alert-danger" *ngIf="date.touched && !date.valid">
+          <div *ngIf="date.errors.required">Date is required.</div>
+        </div>
+      </div>
+      <div class="alert alert-danger" *ngIf="error">
+        {{ error }}
+      </div>
+      <div class="btn-group float-right">
+        <button class="btn btn-secondary" routerLink="../">Cancel</button>
+        <button class="btn btn-info" type="submit" [disabled]="!f.valid">
+          Create
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

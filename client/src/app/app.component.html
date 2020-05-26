@@ -1,0 +1,9 @@
+<ul class="nav top-nav" *ngIf="url !== '/login' && url !== '/register'">
+  <li class="nav-item">
+    <a class="nav-link">Welcome {{ user.name }}</a>
+  </li>
+  <li class="nav-item btn btn-secondary btn-sm">
+    <a class="nav-link" (click)="logout()">Logout</a>
+  </li>
+</ul>
+<router-outlet></router-outlet>

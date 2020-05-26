@@ -1,0 +1,112 @@
+<div class="centered-content bg-info">
+  <div class="modal-box bg-light text-secondary">
+    <h2 class="title" *ngIf="user.isManager">
+      Edit a task
+    </h2>
+    <h2 class="title" *ngIf="!user.isManager">
+      Change task status
+    </h2>
+    <form #f="ngForm" (ngSubmit)="updateTask(f.value)">
+      <div class="form-group" *ngIf="user.isManager">
+        <input
+          required
+          minlength="3"
+          [ngModel]="task.description"
+          name="description"
+          #description="ngModel"
+          class="form-control"
+          type="text"
+          placeholder="Task description"
+        />
+        <div
+          class="alert alert-danger"
+          *ngIf="description.touched && !description.valid"
+        >
+          <div *ngIf="description.errors.required">
+            Description is required.
+          </div>
+          <div *ngIf="description.errors.minlength">
+            Description should be at least 3 characters.
+          </div>
+        </div>
+      </div>
+      <div class="form-group" *ngIf="user.isManager">
+        <input
+          required
+          [ngModel]="task.date"
+          name="date"
+          #date="ngModel"
+          class="form-control"
+          type="date"
+          placeholder="Date"
+        />
+        <div class="alert alert-danger" *ngIf="date.touched && !date.valid">
+          <div *ngIf="date.errors.required">Date is required.</div>
+        </div>
+      </div>
+      <div class="form-group" *ngIf="user.isManager">
+        <label for="assignee">Assignee</label
+        ><select
+          required
+          [ngModel]="task.assignee._id"
+          name="assignee"
+          #assignee="ngModel"
+          id="assignee"
+          class="form-control"
+        >
+          <option *ngFor="let employee of employees" [value]="employee._id">{{
+            employee.name
+          }}</option>
+        </select>
+        <div
+          class="alert alert-danger"
+          *ngIf="assignee.touched && !assignee.valid"
+        >
+          Assignee is required.
+        </div>
+      </div>
+      <div
+        class="form-group"
+        *ngIf="!user.isManager || f.value.assignee === user._id"
+      >
+        <label for="status">Status</label
+        ><select
+          required
+          [ngModel]="task.status"
+          name="status"
+          #status="ngModel"
+          id="status"
+          class="form-control"
+        >
+          <option value="pending">
+            Pending
+          </option>
+          <option value="ongoing">
+            Ongoing
+          </option>
+          <option value="completed">
+            Completed
+          </option>
+        </select>
+        <div class="alert alert-danger" *ngIf="status.touched && !status.valid">
+          Status is required.
+        </div>
+      </div>
+      <div class="alert alert-danger" *ngIf="error">
+        {{ error }}
+      </div>
+      <!-- <p>{{ f.value | json }}</p> -->
+      <div class="btn-group float-right">
+        <button
+          class="btn btn-secondary"
+          [routerLink]="['/employees', task.assignee._id]"
+        >
+          Cancel
+        </button>
+        <button class="btn btn-info" type="submit" [disabled]="!f.valid">
+          Update
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

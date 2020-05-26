@@ -1,0 +1,112 @@
+<div class="centered-content bg-info">
+  <div class="modal-box bg-light text-secondary">
+    <h2 class="title">
+      Edit an employee
+    </h2>
+    <form
+      #f="ngForm"
+      (ngSubmit)="updateEmployee(f.value)"
+      [mustMatch]="['password', 'confirmPassword']"
+    >
+      <div class="form-group">
+        <input
+          required
+          [ngModel]="employee.name"
+          name="name"
+          #name="ngModel"
+          class="form-control"
+          type="text"
+          placeholder="Name"
+        />
+        <div class="alert alert-danger" *ngIf="name.touched && !name.valid">
+          Name is required.
+        </div>
+      </div>
+      <div class="form-group">
+        <input
+          required
+          pattern="^[0-9]*$"
+          maxlength="4"
+          [ngModel]="employee.employeeId"
+          name="employeeId"
+          #employeeId="ngModel"
+          class="form-control"
+          type="text"
+          placeholder="Employee ID"
+        />
+        <div
+          class="alert alert-danger"
+          *ngIf="employeeId.touched && !employeeId.valid"
+        >
+          <div *ngIf="employeeId.errors.required">Id is required.</div>
+          <div *ngIf="employeeId.errors.pattern">
+            Id should be a whole number.
+          </div>
+          <div *ngIf="employeeId.errors.maxlength">
+            Id should be less than 9999.
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <input
+          required
+          minlength="5"
+          ngModel
+          name="password"
+          #password="ngModel"
+          class="form-control"
+          type="password"
+          placeholder="Password"
+        />
+        <div
+          class="alert alert-danger"
+          *ngIf="password.touched && !password.valid"
+        >
+          <div *ngIf="password.errors.required">
+            Password is required.
+          </div>
+          <div *ngIf="password.errors.minlength">
+            Password should be at least 5 characters.
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <input
+          required
+          ngModel
+          name="confirmPassword"
+          #confirmPassword="ngModel"
+          class="form-control"
+          type="password"
+          placeholder="Confirm Password"
+        />
+        <div
+          class="alert alert-danger"
+          *ngIf="confirmPassword.touched && !confirmPassword.valid"
+        >
+          <div *ngIf="confirmPassword.errors.required">
+            Please confirm the password.
+          </div>
+          <div *ngIf="confirmPassword.errors.mustMatch">
+            Confirm password doesn't match.
+          </div>
+        </div>
+      </div>
+      <div class="alert alert-danger" *ngIf="error">
+        {{ error }}
+      </div>
+      <!-- <p>{{ f.value | json }}</p> -->
+      <div class="btn-group float-right">
+        <button
+          class="btn btn-secondary"
+          [routerLink]="['/employees', employee._id]"
+        >
+          Cancel
+        </button>
+        <button class="btn btn-info" type="submit" [disabled]="!f.valid">
+          Update
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

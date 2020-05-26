@@ -1,0 +1,142 @@
+<div class="centered-content bg-info">
+  <div class="row dashboard-container">
+    <div class="col-4 employees-container bg-secondary">
+      <h2
+        class="text-light"
+        routerLink="/employees"
+        style="cursor: pointer;"
+        *ngIf="user.isManager"
+      >
+        Employees
+      </h2>
+
+      <h2 class="text-light" *ngIf="!user.isManager">
+        Employee
+      </h2>
+
+      <div class="employee-menu">
+        <a
+          class="employee-menu-item"
+          *ngFor="let employee of employees"
+          [routerLink]="['/employees', employee._id]"
+          routerLinkActive="is-active"
+        >
+          <p>{{ employee.employeeId }} - {{ employee.name }}</p>
+        </a>
+      </div>
+
+      <button
+        class="btn btn-info tex-white"
+        routerLink="/new-employee"
+        *ngIf="user.isManager"
+      >
+        + New Employee
+      </button>
+    </div>
+
+    <div class="col-8 tasks-container bg-light">
+      <div class="top-bar">
+        <h2 class="text-secondary" *ngIf="selectedEmployeeId">
+          Tasks
+        </h2>
+        <div class="dropdown" *ngIf="selectedEmployeeId">
+          <button
+            class="btn btn-info tex-white dropdown-toggle"
+            type="button"
+            data-toggle="dropdown"
+          >
+            <i class="fas fa-cog"></i>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-item">
+            <li>
+              <a [routerLink]="['/edit-employee', selectedEmployeeId]"
+                >Edit employee</a
+              >
+            </li>
+            <li><a (click)="onDeleteEmployeeClick()">Delete employee</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <h3 class="text-secondary" *ngIf="!selectedEmployeeId && user.isManager">
+        Summary:
+        <span style="font-size: smaller; font-style: italic;"
+          >You and your team have {{ totalTasks }} tasks in:</span
+        >
+      </h3>
+      <h3 class="text-secondary" *ngIf="!selectedEmployeeId && !user.isManager">
+        Summary:
+        <span style="font-size: smaller; font-style: italic;"
+          >You and your team have {{ totalTasks }} tasks in:</span
+        >
+      </h3>
+      <div class="form-group" *ngIf="!selectedEmployeeId">
+        <input
+          [(ngModel)]="selectedDate"
+          (change)="onDateChange()"
+          class="form-control"
+          type="date"
+        />
+      </div>
+
+      <!-- Task Elements -->
+      <div
+        class="task"
+        *ngFor="let task of tasks"
+        [ngClass]="{
+          'task-completed': task.status === 'completed',
+          'task-ongoing': task.status === 'ongoing'
+        }"
+      >
+        <div class="task-text">
+          <div>
+            <p>{{ task.description }}</p>
+            <p class="date">{{ task.date }}</p>
+          </div>
+        </div>
+
+        <div class="task-buttons">
+          <button
+            class="btn btn-info"
+            [routerLink]="[
+              '/employees',
+              selectedEmployeeId,
+              'edit-task',
+              task._id
+            ]"
+          >
+            <div class="icon">
+              <i class="fas fa-edit"></i>
+            </div>
+          </button>
+
+          <button
+            class="btn btn-danger"
+            style="margin-left: 10px;"
+            (click)="onDeleteTaskClick(task._id)"
+            *ngIf="user.isManager"
+          >
+            <div class="icon">
+              <i class="fas fa-trash"></i>
+            </div>
+          </button>
+        </div>
+      </div>
+
+      <h4
+        class="empty-state-text"
+        *ngIf="tasks.length === 0 && selectedEmployeeId"
+      >
+        There are no tasks for this employee!
+      </h4>
+
+      <button
+        routerLink="./new-task"
+        class="circle-add-button btn btn-info"
+        *ngIf="selectedEmployeeId && user.isManager"
+      >
+        <img src="../../../assets/plus-icon.svg" class="text-white" />
+      </button>
+    </div>
+  </div>
+</div>
